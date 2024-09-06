@@ -1,0 +1,65 @@
+﻿@model MyProject.Models.BankAccount
+
+@{
+    ViewData["Title"] = "ویرایش";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>شماره حساب</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="AccountNumber" class="control-label"></label>
+                <input asp-for="AccountNumber" class="form-control" readonly />
+                <span asp-validation-for="AccountNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedDateTime" class="control-label"></label>
+                <input asp-for="CreatedDateTime" class="form-control" />
+                <span asp-validation-for="CreatedDateTime" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreatedUserId" class="control-label"></label>
+                <select asp-for="CreatedUserId" class="form-control" asp-items="ViewBag.CreatedUserId"></select>
+                <span asp-validation-for="CreatedUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsActive" /> @Html.DisplayNameFor(model => model.IsActive)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Periority" class="control-label"></label>
+                <input asp-for="Periority" class="form-control" />
+                <span asp-validation-for="Periority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepositLimit" class="control-label"></label>
+                <input asp-for="DepositLimit" class="form-control" />
+                <span asp-validation-for="DepositLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalLimit" class="control-label"></label>
+                <input asp-for="TotalLimit" class="form-control" />
+                <span asp-validation-for="TotalLimit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="ذخیره" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">بازگشت</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,38 @@
+﻿@using MyProject.ViewModels
+@model LoginViewModel
+@{
+    ViewData["Title"] = "ورود";
+}
+
+
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <section>
+            <form asp-action="Login">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <h2>فرم ورود به سامانه</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Username" class="form-control" autocomplete="username" aria-required="true" placeholder="نام کاربری" />
+                    <label asp-for="Username" class="form-label">نام کاربری</label>
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-floating mb-3">
+                    <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="کلمه رمز" />
+                    <label asp-for="Password" class="form-label">کلمه عبور</label>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <div>
+                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">ورود</button>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

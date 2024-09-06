@@ -1,0 +1,72 @@
+﻿@model IEnumerable<MyProject.Models.BankAccount>
+
+@{
+    ViewData["Title"] = "لیست شماره حساب ها";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create">افزودن شماره حساب</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AccountNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDateTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Periority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DepositLimit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalLimit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedUser)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.AccountNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDateTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Periority)
+            </td>
+            <td>
+                @item.DepositLimit.ToString("#,#")
+            </td>
+            <td>
+                    @item.TotalLimit.ToString("#,#")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedUser.UserName)
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> |
+                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">جزئیات</a> |
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,49 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">سلام @User.Identity?.Name! </a>
+            <ul class="dropdown-menu">
+                @if (User.IsInRole("Admin"))
+                {
+                    <li><a class="dropdown-item" asp-action="Index" asp-controller="Account">کاربران</a></li>
+                    <li><a class="dropdown-item" asp-action="Index" asp-controller="BankAccounts">شماره حسابها</a></li>
+                    <li><a class="dropdown-item" asp-action="Inquery" asp-controller="Transactions">استعلام حساب</a></li>
+                    <li><a class="dropdown-item" asp-action="Index" asp-controller="Transactions">تراکنش ها</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                   
+                }
+                else if (User.IsInRole("Sales"))
+                {
+                    <li><a class="dropdown-item" asp-action="Inquery" asp-controller="Transactions">استعلام حساب</a></li>
+                    <li><a class="dropdown-item" asp-action="Index" asp-controller="Transactions">تراکنش ها</a></li>
+                }
+                <li>
+                    <form class="form-inline" asp-action="Logout" asp-controller="Account" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="nav-link btn btn-link text-dark">خروج</button>
+                    </form>
+                </li>
+            </ul>
+
+        </li>
+
+        <li>
+            <form class="form-inline" asp-action="Logout" asp-controller="Account" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">خروج</button>
+            </form>
+        </li>
+      
+    }
+    else
+    {
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">ورود</a>
+        </li>
+    }
+</ul>

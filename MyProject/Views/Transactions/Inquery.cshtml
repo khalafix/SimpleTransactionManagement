@@ -1,0 +1,57 @@
+﻿@model MyProject.ViewModels.TransactionInqueryViewModel
+
+@{
+    ViewData["Title"] = "استعلام شماره حساب";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Inquery">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CustomerName" class="control-label"></label>
+                <input asp-for="CustomerName" class="form-control" />
+                <span asp-validation-for="CustomerName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DepositAmount" class="control-label"></label>
+                <input asp-for="DepositAmount" class="form-control" />
+                <span asp-validation-for="DepositAmount" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group mt-2">
+                <input type="submit" value="جستجو" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-outline-warning">بازگشت</a>
+            </div>
+        </form>
+
+       
+    </div>
+    <div class="col-md-8">
+        @if (Model != null && Model.DateTime != null && Model.AccountNumber != null)
+        {
+            <div class="alert alert-success" role="alert">
+                برای مشتری <span class="btn btn-primary">@Model.CustomerName</span>
+                در تاریخ<span class="btn btn-warning">@Model.DateTime?.ToString("yyyy/MM/dd")</span>
+                در ساعت <span class="btn btn-warning">@Model.DateTime?.ToString("HH:mm")</span>
+                سپرده <span class="btn btn-success">@Model.AccountNumber</span> معرفی میگردد.
+            </div>
+
+        }
+    </div>
+</div>
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
