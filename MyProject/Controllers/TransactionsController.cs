@@ -51,7 +51,7 @@ namespace MyProject.Controllers
         // GET: Transactions/Create
         public IActionResult Create()
         {
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Id");
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber");
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName");
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName");
             return View();
@@ -70,7 +70,7 @@ namespace MyProject.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Id", transaction.BankAccountId);
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", transaction.BankAccountId);
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
             return View(transaction);
@@ -89,7 +89,7 @@ namespace MyProject.Controllers
             {
                 return NotFound();
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Id", transaction.BankAccountId);
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", transaction.BankAccountId);
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
             return View(transaction);
@@ -127,7 +127,7 @@ namespace MyProject.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "Id", transaction.BankAccountId);
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", transaction.BankAccountId);
             ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
             ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
             return View(transaction);
@@ -184,9 +184,20 @@ namespace MyProject.Controllers
             if (ModelState.IsValid)
             {
                 // جستجوی شماره حساب متناسب با مبلغ واریزی
+                try
+                {
+                    var bankAccount = _context.Database.SqlQuery<string>($"exec GetBankAccountByDepositAmount {model.DepositAmount}").ToList();
+                    if (bankAccount != null)
+                    {
+                        model.DateTime = DateTime.Now;
+                        model.AccountNumber = bankAccount.FirstOrDefault()!.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
 
-                model.DateTime = DateTime.Now;
-                model.AccountNumber = model.DepositAmount.ToString();
+                    ViewData["errorMessage"] = ex.Message ;
+                }
 
             }
             return View(model);

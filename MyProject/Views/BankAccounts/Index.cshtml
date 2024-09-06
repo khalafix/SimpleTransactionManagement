@@ -62,9 +62,9 @@
                 @Html.DisplayFor(modelItem => item.CreatedUser.UserName)
             </td>
             <td>
-                <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> |
-                <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">جزئیات</a> |
-                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
+                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id">ویرایش</a> |
+                    <a class="btn btn-sm btn-info" asp-action="Details" asp-route-id="@item.Id">جزئیات</a> |
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@item.Id">حذف</a>
             </td>
         </tr>
 }
