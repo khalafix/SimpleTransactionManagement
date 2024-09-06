@@ -53,10 +53,10 @@
                 @Html.DisplayFor(modelItem => item.Periority)
             </td>
             <td>
-                @item.DepositLimit.ToString("#,#")
+                @item.DepositLimit.ToString("N0")
             </td>
             <td>
-                    @item.TotalLimit.ToString("#,#")
+                    @item.TotalLimit.ToString("N0")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedUser.UserName)
