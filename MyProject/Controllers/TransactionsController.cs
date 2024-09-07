@@ -62,7 +62,7 @@ namespace MyProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BankAccountId,UserId,CustomerId,DepositDateTime,DepositAmount,DepositReceipt")] Transaction transaction)
+        public async Task<IActionResult> Create(TransactionViewModel model ,IFormFile DepositReceiptFile)
         {
             if (ModelState.IsValid)
             {

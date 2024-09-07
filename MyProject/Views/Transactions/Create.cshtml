@@ -1,4 +1,4 @@
-﻿@model MyProject.Models.Transaction
+﻿@model MyProject.ViewModels.TransactionViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="BankAccountId" class="control-label">شماره حساب</label>
@@ -21,14 +21,17 @@
                 <label asp-for="UserId" class="control-label"></label>
                 <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="CustomerId" class="control-label"></label>
-                <select asp-for="CustomerId" class ="form-control" asp-items="ViewBag.CustomerId"></select>
-            </div>
+           
             <div class="form-group">
                 <label asp-for="DepositDateTime" class="control-label"></label>
                 <input asp-for="DepositDateTime" class="form-control" />
                 <span asp-validation-for="DepositDateTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DepositReceiptFile" class="control-label"></label>
+                <input asp-for="DepositReceiptFile" type="file" class="form-control" />
+                <span asp-validation-for="DepositReceiptFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="DepositAmount" class="control-label"></label>
