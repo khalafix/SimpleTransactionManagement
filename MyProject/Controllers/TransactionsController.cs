@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using MyProject.DataModel;
 using MyProject.Models;
 using MyProject.ViewModels;
@@ -14,10 +15,11 @@ namespace MyProject.Controllers
     public class TransactionsController : Controller
     {
         private readonly ApplicationContext _context;
-
-        public TransactionsController(ApplicationContext context)
+        private     readonly IWebHostEnvironment _webHostEnvironment;
+        public TransactionsController(ApplicationContext context , IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Transactions
@@ -62,18 +64,44 @@ namespace MyProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TransactionViewModel model ,IFormFile DepositReceiptFile)
+        public async Task<IActionResult> Create(TransactionViewModel model )
         {
             if (ModelState.IsValid)
             {
+                if (model.DepositReceiptFile != null)
+                {
+                    string filename = $"{Guid.NewGuid().ToString()}_{model.DepositReceiptFile.FileName}";
+                    var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "uploads",filename);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await model.DepositReceiptFile.CopyToAsync(stream);
+                    }
+                    model.DepositReceipt = filename;
+                }
+                User customer = new User()
+                {
+                    UserName = $"{model.FirstName}_{model.LastName}",
+                    FirstName = model.FirstName,
+                    LastName = model.LastName
+                };
+
+                _context.Users.Add(customer);
+                Transaction transaction = new Transaction() { 
+                     BankAccountId = model.BankAccountId,
+                     CustomerId = customer.Id,
+                     DepositReceipt = model.DepositReceipt,
+                     DepositDateTime = model.DepositDateTime,
+                     DepositAmount = model.DepositAmount,
+
+                };
                 _context.Add(transaction);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", transaction.BankAccountId);
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
-            return View(transaction);
+            ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", model.BankAccountId);
+           // ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", model.CustomerId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", model.UserId);
+            return View(model);
         }
 
         // GET: Transactions/Edit/5
@@ -128,8 +156,8 @@ namespace MyProject.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["BankAccountId"] = new SelectList(_context.BankAccounts, "Id", "AccountNumber", transaction.BankAccountId);
-            ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
+            //ViewData["CustomerId"] = new SelectList(_context.Users, "Id", "UserName", transaction.CustomerId);
+            //ViewData["UserId"] = new SelectList(_context.Users, "Id", "UserName", transaction.UserId);
             return View(transaction);
         }
 

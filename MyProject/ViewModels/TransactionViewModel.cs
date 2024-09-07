@@ -9,7 +9,7 @@ namespace MyProject.ViewModels
 
         [Display(Name = "شناسه")] public int Id { get; set; }
         [Display(Name = "شناسه حساب")] public int BankAccountId { get; set; }
-        [Display(Name = "شناسه کاربر")][ForeignKey("User")] public int UserId { get; set; }
+        //[Display(Name = "شناسه کاربر")][ForeignKey("User")] public int UserId { get; set; }
         [Display(Name = "نام")] public string? FirstName { get; set; }
         [Display(Name = "نام خانوادگی ")]public string? LastName { get; set; }
         public string? DisplayName
