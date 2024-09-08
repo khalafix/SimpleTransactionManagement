@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,14 @@ namespace MyProject.Controllers
     {
         private readonly ApplicationContext _context;
         private     readonly IWebHostEnvironment _webHostEnvironment;
-        public TransactionsController(ApplicationContext context , IWebHostEnvironment webHostEnvironment)
+        private readonly UserManager<User> _userManager;
+        public TransactionsController(ApplicationContext context , IWebHostEnvironment webHostEnvironment
+            , UserManager<User> userManager
+            )
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            _userManager = userManager;
         }
 
         // GET: Transactions
@@ -68,6 +73,7 @@ namespace MyProject.Controllers
         {
             if (ModelState.IsValid)
             {
+                int userId = Convert.ToInt32(_userManager.GetUserId(User));
                 if (model.DepositReceiptFile != null)
                 {
                     string filename = $"{Guid.NewGuid().ToString()}_{model.DepositReceiptFile.FileName}";
@@ -78,16 +84,22 @@ namespace MyProject.Controllers
                     }
                     model.DepositReceipt = filename;
                 }
-                User customer = new User()
+
+                var hasher = new PasswordHasher<User>();
+                var customer = new User()
                 {
                     UserName = $"{model.FirstName}_{model.LastName}",
                     FirstName = model.FirstName,
-                    LastName = model.LastName
+                    LastName = model.LastName,
+                    LockoutEnabled = true,
+                    SecurityStamp = Guid.NewGuid().ToString("D"),
+                    PasswordHash = hasher.HashPassword(null, "admin"),
                 };
-
                 _context.Users.Add(customer);
+                _context.SaveChanges();
                 Transaction transaction = new Transaction() { 
                      BankAccountId = model.BankAccountId,
+                     UserId = userId,
                      CustomerId = customer.Id,
                      DepositReceipt = model.DepositReceipt,
                      DepositDateTime = model.DepositDateTime,

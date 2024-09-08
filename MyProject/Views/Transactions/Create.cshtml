@@ -17,7 +17,17 @@
                 <label asp-for="BankAccountId" class="control-label">شماره حساب</label>
                 <select asp-for="BankAccountId" class ="form-control" asp-items="ViewBag.BankAccountId"></select>
             </div>
-            
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="DepositDateTime" class="control-label"></label>
                 <input asp-for="DepositDateTime" class="form-control" />
@@ -34,11 +44,7 @@
                 <input asp-for="DepositAmount" class="form-control" />
                 <span asp-validation-for="DepositAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="DepositReceipt" class="control-label"></label>
-                <input asp-for="DepositReceipt" class="form-control" />
-                <span asp-validation-for="DepositReceipt" class="text-danger"></span>
-            </div>
+          
             <div class="form-group">
                 <input type="submit" value="ایجاد" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-outline-warning">بازگشت</a>

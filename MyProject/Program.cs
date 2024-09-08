@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using MyProject.DataModel;
 using MyProject.Models;
@@ -49,8 +50,9 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var webHostEnv = scope.ServiceProvider.GetService<IWebHostEnvironment>();
 
-    SeedData.Initialize(services);
+    SeedData.Initialize(services , webHostEnv!);
 }
 
 // Configure the HTTP request pipeline.

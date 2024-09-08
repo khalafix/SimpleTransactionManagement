@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MyProject.DataModel;
 
@@ -12,14 +13,17 @@ namespace MyProject.Models
         /// کاربر مدیر سامانه 
         /// </summary>
         /// <param name="serviceProvider"></param>
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(IServiceProvider serviceProvider , IWebHostEnvironment webHostEnvironment)
         {
             
             using (var context = new ApplicationContext(
                 serviceProvider.GetRequiredService<
                     DbContextOptions<ApplicationContext>>()))
             {
-                
+                if (!Directory.Exists(Path.Combine(webHostEnvironment.WebRootPath, "uploads")))
+                {
+                    Directory.CreateDirectory(Path.Combine(webHostEnvironment.WebRootPath, "uploads"));
+                }
                 // Look for any movies.
                 if (context.Roles.Any())
                 {
@@ -50,6 +54,9 @@ namespace MyProject.Models
                 //var adminUser = context.Users.FirstOrDefault(x=>x.UserName = admin)
                 context.UserRoles.Add(new UserRole() { UserId = user.Id , RoleId = role.Id });
                 context.SaveChanges();
+
+               
+
             }
 
 
