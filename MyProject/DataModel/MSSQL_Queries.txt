@@ -1,54 +1,19 @@
-﻿--===============================================================
-Create Procedure GetBankAccountByDepositAmount 
-@DepositAmount INT   -- مقدار واریزی شما
-as
-if @DepositAmount <= 3 
-	begin
-		select * from BankAccounts where Id = 6
-	End
-else
-	begin
-		WITH AccountDeposits AS (
-		    -- محاسبه مجموع واریزی‌های انجام شده برای هر حساب
-		    SELECT 
-		        a.Id AS BankAccountId,
-		        a.AccountNumber,
-		        a.TotalLimit,
-		        a.DepositLimit,
-		        a.Periority,
-		        ISNULL(SUM(d.DepositAmount), 0) AS TotalDeposited
-		    FROM BankAccounts a
-		    LEFT JOIN Transactions d
-		        ON a.Id = d.BankAccountId
-		    WHERE a.IsActive = 1
-		    GROUP BY a.Id, a.AccountNumber, a.TotalLimit, a.DepositLimit, a.Periority
-		)
-		
-		-- انتخاب حساب مناسب بر اساس مبلغ واریزی
-		SELECT TOP 1 
-		    BankAccountId, 
-		    AccountNumber, 
-		    TotalLimit, 
-		    DepositLimit, 
-		    TotalDeposited, 
-		    Periority
-		FROM AccountDeposits
-		WHERE
-		    -- برای مبالغ کمتر یا مساوی مبلغ واریزی
-		    @DepositAmount <= DepositLimit
-		    AND (TotalDeposited + @DepositAmount <= TotalLimit)  -- بررسی محدودیت کل واریزی‌ها
-		ORDER BY Periority ASC;  -- بر اساس اولویت حساب‌ها
-End
---===============================================================
+﻿USE [TransactionDB]
+GO
+/****** Object:  StoredProcedure [dbo].[GetBankAccountByDepositAmount]    Script Date: 2024-10-06 6:35:35 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-alter procedure GetBankAccountByDepositAmount 
+ALTER procedure [dbo].[GetBankAccountByDepositAmount] 
 @DepositAmount INT   -- مقدار واریزی شما
 as
-if @DepositAmount <= 3 
-	begin
-		select AccountNumber from BankAccounts where Id = 6
-	End
-else
+--if @DepositAmount <= 3 
+--	begin
+--		select AccountNumber from BankAccounts where Id = 6
+--	End
+--else
 	begin
 		WITH AccountDeposits AS (
 		    -- محاسبه مجموع واریزی‌های انجام شده برای هر حساب
@@ -56,6 +21,7 @@ else
 		        a.Id AS BankAccountId,
 		        a.AccountNumber,
 		        a.TotalLimit,
+				a.MinAmount,
 		        a.DepositLimit,
 		        a.Periority,
 		        ISNULL(SUM(d.DepositAmount), 0) AS TotalDeposited
@@ -63,7 +29,7 @@ else
 		    LEFT JOIN Transactions d
 		        ON a.Id = d.BankAccountId
 		    WHERE a.IsActive = 1
-		    GROUP BY a.Id, a.AccountNumber, a.TotalLimit, a.DepositLimit, a.Periority
+		    GROUP BY a.Id, a.AccountNumber, a.TotalLimit, a.MinAmount, a.DepositLimit, a.Periority
 		)
 		
 		-- انتخاب حساب مناسب بر اساس مبلغ واریزی
@@ -77,8 +43,7 @@ else
 		FROM AccountDeposits
 		WHERE
 		    -- برای مبالغ کمتر یا مساوی مبلغ واریزی
-		    @DepositAmount <= DepositLimit
+		    @DepositAmount between MinAmount and DepositLimit
 		    AND (TotalDeposited + @DepositAmount <= TotalLimit)  -- بررسی محدودیت کل واریزی‌ها
 		ORDER BY Periority ASC;  -- بر اساس اولویت حساب‌ها
 End
-

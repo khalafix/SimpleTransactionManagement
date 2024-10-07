@@ -26,6 +26,9 @@
                 @Html.DisplayNameFor(model => model.Periority)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.MinAmount)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.DepositLimit)
             </th>
             <th>
@@ -52,6 +55,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Periority)
             </td>
+                <td>
+                    @item.MinAmount.ToString("N0")
+                </td>
             <td>
                 @item.DepositLimit.ToString("N0")
             </td>

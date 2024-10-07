@@ -70,7 +70,7 @@ namespace MyProject.Controllers
 
             List<RegisterViewModel> result = new List<RegisterViewModel>();
 
-            foreach (var user in _context.Users.Include(x => x.Roles!).ThenInclude(x => x.Role).ToList())
+            foreach (var user in _context.Users.Include(x => x.Roles!).ThenInclude(x=>x.Role!).ToList())
             {
                 Role role = new Role();
                 role = user.Roles!.FirstOrDefault()!.Role!;
